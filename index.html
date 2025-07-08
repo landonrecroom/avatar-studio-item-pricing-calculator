@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Avatar Item Pricing Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #f16e46;
+      --text-dark: #222;
+      --text-light: #666;
+      --bg-light: #f9f9f9;
+      --border: #ddd;
+    }
+
+    body {
+      font-family: 'Heebo', sans-serif;
+      background-color: white;
+      color: var(--text-dark);
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    label, select {
+      font-weight: 600;
+      margin: 1rem 0 0.5rem;
+      display: block;
+    }
+
+    select {
+      padding: 0.5rem;
+      font-size: 1rem;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    fieldset {
+      margin-top: 1.5rem;
+      border: 1px solid var(--border);
+      background: var(--bg-light);
+      padding: 1rem;
+    }
+
+    legend {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--primary);
+    }
+
+    .checkbox-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .checkbox-list label {
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.95rem;
+    }
+
+    .result {
+      margin-top: 2rem;
+      padding: 1rem 1.5rem;
+      background: #f16e46;
+      border: 1px solid var(--primary);
+      font-weight: 600;
+      font-size: 1.25rem;
+      color: #ffffff;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Avatar Item Pricing Calculator</h1>
+
+  <label for="itemType">Select Outfit Item Type</label>
+  <select id="itemType">
+    <option value="Headwear">Headwear</option>
+    <option value="Ears">Ears</option>
+    <option value="Face">Face</option>
+    <option value="Neck">Neck</option>
+    <option value="Shoulder">Shoulder</option>
+    <option value="Top">Top</option>
+    <option value="Waist">Waist</option>
+    <option value="Hand">Hand</option>
+    <option value="Legs">Legs</option>
+    <option value="Feet">Feet</option>
+  </select>
+
+  <fieldset>
+    <legend>Premium Features</legend>
+    <div class="checkbox-list">
+      <label><input type="checkbox" value="Fancy" class="modifier"> Fancy</label>
+      <label><input type="checkbox" value="Novelty" class="modifier"> Novelty</label>
+      <label><input type="checkbox" value="Gold" class="modifier"> Gold</label>
+      <label><input type="checkbox" value="Silver" class="modifier"> Silver</label>
+      <label><input type="checkbox" value="Emissive" class="modifier"> Emissive</label>
+      <label><input type="checkbox" value="Shiny" class="modifier"> Shiny</label>
+      <label><input type="checkbox" value="High Fidelity" class="modifier"> High Fidelity</label>
+      <label><input type="checkbox" value="Elevated Shoe" class="modifier"> Elevated Shoe</label>
+      <label><input type="checkbox" value="Helmet" class="modifier"> Helmet</label>
+      <label><input type="checkbox" value="Animated" class="modifier"> Animated</label>
+    </div>
+  </fieldset>
+
+  <div class="result" id="result">
+    Price: —
+  </div>
+
+  <script>
+    const basePrices = {
+      "Headwear": 800,
+      "Ears": 500,
+      "Face": 500,
+      "Neck": 500,
+      "Shoulder": 1000,
+      "Top": 1000,
+      "Waist": 700,
+      "Hand": 700,
+      "Legs": 800,
+      "Feet": 800
+    };
+
+    const multipliers = {
+      "Fancy": 1.6,
+      "Novelty": 1.6,
+      "Gold": 1.2,
+      "Silver": 1.1,
+      "Emissive": 2.0,
+      "Shiny": 1.4,
+      "High Fidelity": 1.2,
+      "Elevated Shoe": 1.8,
+      "Helmet": 2.0,
+      "Animated": 2.4
+    };
+
+    const itemTypeSelect = document.getElementById("itemType");
+    const checkboxes = document.querySelectorAll(".modifier");
+    const resultBox = document.getElementById("result");
+
+    function calculatePrice() {
+      let base = basePrices[itemTypeSelect.value];
+      let total = base;
+
+      checkboxes.forEach(box => {
+        if (box.checked) {
+          total *= multipliers[box.value];
+        }
+      });
+
+      resultBox.textContent = `Price: ${Math.round(total)} RR tokens`;
+    }
+
+    itemTypeSelect.addEventListener("change", calculatePrice);
+    checkboxes.forEach(box => box.addEventListener("change", calculatePrice));
+    calculatePrice();
+  </script>
+
+</body>
+</html>
