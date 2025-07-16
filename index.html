@@ -9,7 +9,6 @@
     :root {
       --primary: #f16e46;
       --text-dark: #222;
-      --text-light: #666;
       --bg-light: #f9f9f9;
       --border: #ddd;
     }
@@ -27,19 +26,6 @@
       font-size: 1.75rem;
       margin-bottom: 1rem;
       color: var(--primary);
-    }
-
-    label, select {
-      font-weight: 600;
-      margin: 1rem 0 0.5rem;
-      display: block;
-    }
-
-    select {
-      padding: 0.5rem;
-      font-size: 1rem;
-      width: 100%;
-      max-width: 300px;
     }
 
     fieldset {
@@ -73,7 +59,7 @@
     .result {
       margin-top: 2rem;
       padding: 1rem 1.5rem;
-      background: #f16e46;
+      background: var(--primary);
       border: 1px solid var(--primary);
       font-weight: 600;
       font-size: 1.25rem;
@@ -86,25 +72,27 @@
 
   <h1>Avatar Item Pricing Calculator</h1>
 
-  <label for="itemType">Select Outfit Item Type</label>
-  <select id="itemType">
-    <option value="Headwear">Headwear</option>
-    <option value="Ears">Ears</option>
-    <option value="Face">Face</option>
-    <option value="Neck">Neck</option>
-    <option value="Shoulder">Shoulder</option>
-    <option value="Top">Top</option>
-    <option value="Waist">Waist</option>
-    <option value="Hand">Hand</option>
-    <option value="Legs">Legs</option>
-    <option value="Feet">Feet</option>
-    <option value="Hair">Hair</option>
-    <option value="Beard">Beard</option>
-  </select>
+  <fieldset>
+    <legend>Select Outfit Item Types</legend>
+    <div class="checkbox-list" id="item-types">
+      <label><input type="checkbox" value="Headwear"> Headwear</label>
+      <label><input type="checkbox" value="Ears"> Ears</label>
+      <label><input type="checkbox" value="Face"> Face</label>
+      <label><input type="checkbox" value="Neck"> Neck</label>
+      <label><input type="checkbox" value="Shoulder"> Shoulder</label>
+      <label><input type="checkbox" value="Top"> Top</label>
+      <label><input type="checkbox" value="Waist"> Waist</label>
+      <label><input type="checkbox" value="Hand"> Hand</label>
+      <label><input type="checkbox" value="Legs"> Legs</label>
+      <label><input type="checkbox" value="Feet"> Feet</label>
+      <label><input type="checkbox" value="Hair"> Hair</label>
+      <label><input type="checkbox" value="Beard"> Beard</label>
+    </div>
+  </fieldset>
 
   <fieldset>
-    <legend>Premium Features</legend>
-    <div class="checkbox-list">
+    <legend>Select Premium Features</legend>
+    <div class="checkbox-list" id="premium-features">
       <label><input type="checkbox" value="Fancy" class="modifier"> Fancy</label>
       <label><input type="checkbox" value="Novelty" class="modifier"> Novelty</label>
       <label><input type="checkbox" value="Gold" class="modifier"> Gold</label>
@@ -151,26 +139,33 @@
       "Animated": 2.4
     };
 
-    const itemTypeSelect = document.getElementById("itemType");
-    const checkboxes = document.querySelectorAll(".modifier");
+    const itemTypeBoxes = document.querySelectorAll('#item-types input[type="checkbox"]');
+    const featureBoxes = document.querySelectorAll('#premium-features input[type="checkbox"]');
     const resultBox = document.getElementById("result");
 
-    function calculatePrice() {
-      let base = basePrices[itemTypeSelect.value];
-      let total = base;
+    function calculateTotal() {
+      let baseTotal = 0;
+      itemTypeBoxes.forEach(box => {
+        if (box.checked) {
+          baseTotal += basePrices[box.value] || 0;
+        }
+      });
 
-      checkboxes.forEach(box => {
+      let total = baseTotal;
+      featureBoxes.forEach(box => {
         if (box.checked) {
           total *= multipliers[box.value];
         }
       });
 
-      resultBox.textContent = `Price: ${Math.round(total)} RR tokens`;
+      resultBox.textContent = baseTotal === 0
+        ? "Price: —"
+        : `Price: ${Math.round(total)} RR tokens`;
     }
 
-    itemTypeSelect.addEventListener("change", calculatePrice);
-    checkboxes.forEach(box => box.addEventListener("change", calculatePrice));
-    calculatePrice();
+    itemTypeBoxes.forEach(box => box.addEventListener("change", calculateTotal));
+    featureBoxes.forEach(box => box.addEventListener("change", calculateTotal));
+    calculateTotal();
   </script>
 
 </body>
